@@ -5,5 +5,5 @@ The main feature is to store the entry data of people (using scanned card such a
 
 The additional feature :
 
-	1. a log device, a text file (.txt), which high-user (admin) can see people who came in
-	2. can export the text log file to excel file (.xlsx)
+	- a log device, a text file (.txt), which high-user (admin) can see people who came in
+	- can export the text log file to excel file (.xlsx)
