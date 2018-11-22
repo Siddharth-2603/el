@@ -5,7 +5,6 @@ password = "takeru123"
 db_name = "gate_pass_system"
 unix_socket = "/opt/lampp/var/mysql/mysql.sock"
 added_expired_date = 30 # in day(s) from current date
-gate_id = 1
 
 # Log
 path_dir_log = "/home/takeru/Documents/My-Projects/Python/gate-pass/logs/"
