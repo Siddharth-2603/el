@@ -21,12 +21,13 @@ class GatePass :
                 host=host,
                 user=username,
                 passwd=password,
-                database=db_name
+                database=db_name,
+                unix_socket=unix_socket
             )
             return db
-        except :
+        except mysql.connector.Error as err:
             self.flagError = True
-            self.errMessage = "Error : cannot connect to database"
+            self.errMessage = err
             print(self.errMessage)
 
     def get_current_datetime(self):
@@ -35,10 +36,22 @@ class GatePass :
     def get_full_current_datetime(self):
         return "[" + self.get_current_datetime().strftime("%a, %d %b %Y %H:%M:%S") + "]"
 
+    def get_added_expired_date(self, days):
+        temp = self.get_current_datetime() + datetime.timedelta(days=added_expired_date)
+        return temp.strftime("%Y-%m-%d %H:%M:$S")
+
     def insert_data_to_database(self, code, dt):
         try :
-            sql = "INSERT INTO entries (code, dt_scan) VALUES (%s, %s)"
-            value = (code, dt)
+            # insert data into 'members' table
+            sql = "INSERT INTO members (uid, expired_dt, created, modified) VALUES (%s, %s, %s, %s)"
+            expired_date = self.get_added_expired_date(added_expired_date)
+            value = (code, expired_date, dt, dt)
+            self.db_cursor.execute(sql, value)
+            self.db.commit()
+
+            # insert data into 'member_details' table
+            sql = "INSERT INTO member_details (member_id, gate_id, created, modified) VALUES (LAST_INSERT_ID(), %s, %s, %s)"
+            value = (gate_id, dt, dt)
             self.db_cursor.execute(sql, value)
             self.db.commit()
 
@@ -121,7 +134,7 @@ class GatePass :
             style_title = workbook.add_format({'bold': True, 'align': 'center', 'valign': 'center'})
 
             # create the column title
-            columns = ['No.', 'Date/Time', 'Code', 'Status']
+            columns = ['No.', 'Date/Time', 'UID', 'Status']
             for i, title in enumerate(columns) :
                 worksheet.write(0, i, title, style_title)
 
@@ -152,14 +165,14 @@ class GatePass :
             if self.flagError == False :
                 while True :
                     if self.flagError == False :
-                        code = str(input(dt + " Scan Code : "))
+                        code = str(input(dt + " Scan UID : "))
                         current_dt = self.get_current_datetime()
                         input_code = re.sub(r"\W", "", code).replace("B", "")
                         if code != "" :
                             status = self.insert_data_to_database(input_code, current_dt)
                             self.post_log_txt(input_code, dt, status)
                         else :
-                            status = "Invalid Code."
+                            status = "Invalid UID."
                             print(status)
                             self.post_log_txt(code, dt, status)
                         print("\n")
