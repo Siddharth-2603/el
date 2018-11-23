@@ -99,12 +99,15 @@ class GatePass :
                 if member_id is not None and member_id != "":
                     message = "UID is valid"
                     print(message)
+                    return message
                 else:
                     self.errMessage = "UID is expired."
                     print(self.errMessage)
+                    return self.errMessage
             else:
                 self.errMessage = "UID is not registered yet."
                 print(self.errMessage)
+                return self.errMessage
         except mysql.connector.Error as err:
             self.flagError = True
             self.errMessage = err
@@ -265,13 +268,12 @@ class GatePass :
                         current_dt = self.get_current_datetime()
                         input_code = re.sub(r"\W", "", code).replace("B", "")
                         if code != "" :
-                            status = self.insert_data_to_database(input_code, current_dt)
-                            # status = self.check_validity(input_code)
-                            self.post_log_txt(input_code, dt, status)
+                            # status = self.insert_data_to_database(input_code, current_dt)
+                            status = self.check_validity(input_code)
                         else :
                             status = "Invalid UID."
                             print(status)
-                            self.post_log_txt(code, dt, status)
+                        self.post_log_txt(code, dt, status)
                         print("\n")
                     else :
                         print(self.errMessage)
