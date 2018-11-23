@@ -30,6 +30,7 @@ class GatePass :
             self.flagError = True
             self.errMessage = err
             print(self.errMessage)
+            return self.errMessage
 
     def get_current_datetime(self):
         return datetime.datetime.now()
@@ -41,12 +42,15 @@ class GatePass :
         temp = self.get_current_datetime() + datetime.timedelta(days=added_expired_date)
         return temp.strftime("%Y-%m-%d %H:%M:%S")
 
+    def set_format_datetime(self, dt):
+        return dt.strftime("%Y-%m-%d %H:%M:%S")
+
     def insert_data_to_database(self, code, dt):
         try :
             # get Gate ID first
             gate_id = -1
             ip_address_device = self.get_ip_address()
-            print(ip_address_device)
+
             if ip_address_device != '':
                 sql = "SELECT id FROM gates WHERE ip_address = '" + str(ip_address_device) + "';"
                 self.db_cursor.execute(sql)
@@ -75,7 +79,35 @@ class GatePass :
                 return message
         except mysql.connector.Error as err:
             self.flagError = True
-            self.errMessage = "Error : failed to insert data to database."
+            self.errMessage = err
+            print(err)
+            return self.errMessage
+
+    def check_validity(self, code):
+        try :
+            # check if UID is registered
+            sql = "SELECT id FROM members WHERE uid = '" + str(code) + "';"
+            self.db_cursor.execute(sql)
+            member_id = self.db_cursor.fetchone()
+
+            # if UID registered, then check expired date
+            if member_id is not None:
+                member_id = member_id[0]
+                sql = "SELECT id FROM members WHERE id = " + str(member_id) + " AND NOW() <= expired_dt;"
+                self.db_cursor.execute(sql)
+                member_id = self.db_cursor.fetchone()
+                if member_id is not None and member_id != "":
+                    message = "UID is valid"
+                    print(message)
+                else:
+                    self.errMessage = "UID is expired."
+                    print(self.errMessage)
+            else:
+                self.errMessage = "UID is not registered yet."
+                print(self.errMessage)
+        except mysql.connector.Error as err:
+            self.flagError = True
+            self.errMessage = err
             print(err)
             return self.errMessage
 
@@ -138,7 +170,7 @@ class GatePass :
             else :
                 type = "w+"
             f = open(path_dir_log + self.get_log_filename(), type)
-            f.write(dt + "\nCode : " + code + "\n" + status + "\n\n")
+            f.write(dt + "\nCode : " + str(code) + "\n" + str(status) + "\n\n")
             f.close()
         except IOError :
             self.flagError = True
@@ -234,6 +266,7 @@ class GatePass :
                         input_code = re.sub(r"\W", "", code).replace("B", "")
                         if code != "" :
                             status = self.insert_data_to_database(input_code, current_dt)
+                            # status = self.check_validity(input_code)
                             self.post_log_txt(input_code, dt, status)
                         else :
                             status = "Invalid UID."
@@ -245,7 +278,6 @@ class GatePass :
                         self.post_log_txt("", dt, self.errMessage)
                         break
             else :
-                print(self.errMessage)
                 self.post_log_txt("", dt, self.errMessage)
         except KeyboardInterrupt:
             print("\nProgram is exit.")
