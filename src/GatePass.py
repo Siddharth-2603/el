@@ -1,4 +1,5 @@
 from src.config import *
+from gpiozero import Button
 
 import mysql.connector
 import datetime
@@ -14,6 +15,7 @@ class GatePass :
     def __init__(self):
         self.db = self.connect_to_database()
         if(self.flagError == False) :
+            self.button = Button(gpio_button)
             self.db_cursor = self.db.cursor(buffered=True)
 
     def connect_to_database(self):
@@ -268,8 +270,10 @@ class GatePass :
                         current_dt = self.get_current_datetime()
                         input_code = re.sub(r"\W", "", code).replace("B", "")
                         if code != "" :
-                            # status = self.insert_data_to_database(input_code, current_dt)
-                            status = self.check_validity(input_code)
+                            if self.button.is_pressed:
+                                status = self.insert_data_to_database(input_code, current_dt)
+                            else:
+                                status = self.check_validity(input_code)
                         else :
                             status = "Invalid UID."
                             print(status)
