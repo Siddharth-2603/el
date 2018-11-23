@@ -47,6 +47,22 @@ class GatePass :
     def set_format_datetime(self, dt):
         return dt.strftime("%Y-%m-%d %H:%M:%S")
 
+    def has_been_registered(self, uid):
+        try:
+            sql = "SELECT id FROM members WHERE uid = " + str(uid)
+            self.db_cursor.execute(sql)
+            member_id = self.db_cursor.fetchone()
+
+            if member_id is not None:
+                return True
+            else:
+                return False
+        except mysql.connector.Error as err:
+            self.flagError = True
+            self.errMessage = err
+            print(self.errMessage)
+            return self.errMessage
+
     def insert_data_to_database(self, code, dt):
         try :
             # get Gate ID first
@@ -271,7 +287,11 @@ class GatePass :
                         input_code = re.sub(r"\W", "", code).replace("B", "")
                         if code != "" :
                             if self.button.is_pressed:
-                                status = self.insert_data_to_database(input_code, current_dt)
+                                if not self.has_been_registered(input_code):
+                                    status = self.insert_data_to_database(input_code, current_dt)
+                                else:
+                                    status = "Warning: UID is already registered."
+                                    print(status)
                             else:
                                 status = self.check_validity(input_code)
                         else :
