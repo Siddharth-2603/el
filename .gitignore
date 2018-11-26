@@ -1,4 +1,4 @@
 .idea/
-#src/config.py
-#logs/
+src/config.py
+logs/
 src/__pycache__/
