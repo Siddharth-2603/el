@@ -1,0 +1,4 @@
+[Thu, 29 Nov 2018 12:30:54]
+Code : 
+2002: Can't connect to local MySQL server through socket '/opt/lampp/var/mysql/mysql.sock' (111 Connection refused)
+
