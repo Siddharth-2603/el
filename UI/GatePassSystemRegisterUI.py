@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkcalendar import Calendar, DateEntry
 
-class GateSystemPassUI:
+class GateSystemPassRegisterUI:
     fields = ["UID", "Nama", "Expired Date"]
     entries = []
 
