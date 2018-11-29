@@ -1,4 +1,4 @@
-from NonUI.src.config import *
+from UI.src.config import *
 
 import mysql.connector
 import datetime
