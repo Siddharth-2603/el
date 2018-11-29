@@ -7,6 +7,7 @@ import os
 import xlsxwriter
 import socket, fcntl, struct, io
 
+
 class GatePassSystem:
     flagError = False
     errMessage = ""

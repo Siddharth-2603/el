@@ -91,13 +91,16 @@ class GateSystemPassRegisterUI:
             uid = data[0]
             name = data[1]
             expired_dt = data[2]
-            if gps.has_been_registered(uid):
-                showwarning("Warning", "UID '" + uid + "' Already Registered.")
-            else:
-                result = gps.insert_data_to_database(uid, name, expired_dt)
-                if gps.flagError:
-                    showerror("Failed", result)
+            if gps.flagError == False:
+                if gps.has_been_registered(uid):
+                    showwarning("Warning", "UID '" + uid + "' Already Registered.")
                 else:
-                    showinfo("Success", result)
+                    result = gps.insert_data_to_database(uid, name, expired_dt)
+                    if gps.flagError:
+                        showerror("Failed", result)
+                    else:
+                        showinfo("Success", result)
+            else:
+                showerror("Failed", "Cannot connect to database.")
         else:
             showwarning("Warning", data)
