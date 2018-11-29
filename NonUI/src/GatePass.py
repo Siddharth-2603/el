@@ -1,4 +1,4 @@
-from src.config import *
+from NonUI.src.config import *
 from gpiozero import Button
 
 import mysql.connector

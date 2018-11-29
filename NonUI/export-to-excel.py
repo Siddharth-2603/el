@@ -1,4 +1,4 @@
-from src.GatePass import *
+from NonUI.src.GatePass import *
 
 import sys
 
