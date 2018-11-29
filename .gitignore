@@ -2,4 +2,5 @@
 NonUI/src/config.py
 logs/
 NONUI/src/__pycache__/
+UI/__pycache__/
 UI/src/__pycache__/

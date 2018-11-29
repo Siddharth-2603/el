@@ -6,19 +6,20 @@ class GateSystemPassUI:
     fields = ["UID", "Nama", "Expired Date"]
     entries = []
 
-    def __init__(self):
+    def __init__(self, root):
+        self.root = root
         ents = self.make_form()
-        root.bind('<Return>', (lambda event, e = ents : self.get_entry_fields()))
+        self.root.bind('<Return>', (lambda event, e = ents : self.get_entry_fields()))
 
-        b1 = tk.Button(root, text="Exit", command=root.quit)
+        b1 = tk.Button(self.root, text="Exit", command=self.root.quit)
         b1.pack(side=tk.RIGHT, padx=5, pady=5)
 
-        b2 = tk.Button(root, text="Submit", command=(lambda e=ents: self.get_entry_fields()))
+        b2 = tk.Button(self.root, text="Submit", command=(lambda e=ents: self.get_entry_fields()))
         b2.pack(side=tk.RIGHT, padx=5, pady=5)
 
     def make_form(self):
         for field in self.fields:
-            row = tk.Frame(root)
+            row = tk.Frame(self.root)
             lab = tk.Label(row, width=15, text=field, anchor='w')
             if field.lower() == "expired date":
                 self.entryDate = tk.Entry(row)
@@ -47,7 +48,7 @@ class GateSystemPassUI:
             print(field,":", text)
 
     def input_datepicker(self):
-        self.top = tk.Toplevel(root)
+        self.top = tk.Toplevel(self.root)
         cal = Calendar(self.top, font="Arial 12", selectmode='day', cursor="hand1")
         cal.pack(fill="both", expand=True)
         ttk.Button(self.top, text="OK", command=(lambda e = cal : self.get_input_datepicker(cal.selection_get()))).pack()
@@ -62,13 +63,3 @@ class GateSystemPassUI:
         if not temp.isdigit():
             print("input must be numberic only.")
             self.uid.delete(len(temp)-1, tk.END)
-
-root = tk.Tk()
-root.title("Registration Form")
-root.geometry("350x150")
-root.resizable(0,0)
-# s = ttk.Style(root)
-# s.theme_use('clam')
-
-gate = GateSystemPassUI()
-tk.mainloop()
