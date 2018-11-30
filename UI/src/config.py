@@ -9,4 +9,4 @@ unix_socket = "/opt/lampp/var/mysql/mysql.sock"
 path_dir_log = "/home/takeru/Documents/My-Projects/Python/gate-pass/logs/"
 path_dir_log_excel = "/home/takeru/Documents/My-Projects/Python/gate-pass/logs/excel/"
 
-icon_path = "src/icons/mPay-icon.png"
+icon_path = "src/icons/register.png"

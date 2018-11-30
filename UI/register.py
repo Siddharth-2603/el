@@ -9,7 +9,7 @@ if __name__ == "__main__":
     root.resizable(0, 0)
     try:
         program_directory = sys.path[0]
-        # root.iconphoto(True, tk.PhotoImage(file=os.path.join(program_directory, "src/icons/mPay-icon.png")))
+        # root.iconphoto(True, tk.PhotoImage(file=os.path.join(program_directory, "src/icons/register.png")))
         img = tk.PhotoImage(file=os.path.join(program_directory, icon_path))
         root.tk.call('wm', 'iconphoto', root._w, img)
         # root.wm_iconbitmap(bitmap="@/home/takeru/Documents/My-Projects/Python/gate-pass/UI/src/icons/Account-Card-Blue.ico")
