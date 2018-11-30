@@ -3,6 +3,7 @@ import sys
 
 if __name__ == "__main__":
     root = tk.Tk()
+    root.option_add('*Dialog.msg.width', 15)
     root.title("Registration Form")
     root.geometry("350x150")
     root.resizable(0, 0)
