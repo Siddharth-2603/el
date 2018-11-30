@@ -1,7 +1,7 @@
 import tkinter as tk
 import mysql.connector
 from tkinter import ttk
-from tkcalendar import Calendar, DateEntry
+from tkcalendar import Calendar
 from tkinter.messagebox import *
 
 from UI.src.GatePassSystem import *
@@ -12,11 +12,12 @@ class GateSystemPassRegisterUI:
     entries = []
 
     def __init__(self, root):
+        self.count_window = 0
         self.root = root
         ents = self.make_form()
         self.root.bind('<Return>', (lambda event, e=ents: self.get_entry_fields()))
 
-        b1 = tk.Button(self.root, text="Exit", command=self.root.quit, bg="red", fg='white')
+        b1 = tk.Button(self.root, text="Exit", command=self.exit_program, bg="red", fg='white')
         b1.pack(side=tk.RIGHT, padx=5, pady=5)
 
         b2 = tk.Button(self.root, text="Submit", command=(lambda e=ents: self.submit_data_to_database()), bg='green', fg='white')
@@ -68,12 +69,16 @@ class GateSystemPassRegisterUI:
             return warning_message
 
     def input_datepicker(self):
-        self.top = tk.Toplevel(self.root)
-        cal = Calendar(self.top, font="Arial 12", selectmode='day', cursor="hand1")
-        cal.pack(fill="both", expand=True)
-        ttk.Button(self.top, text="OK", command=(lambda e=cal: self.get_input_datepicker(cal.selection_get()))).pack()
+        self.count_window += 1
+        if self.count_window < 2:
+            self.top = tk.Toplevel(self.root)
+            self.top.protocol("WM_DELETE_WINDOW", self.set_count_window)
+            cal = Calendar(self.top, font="Arial 12", selectmode='day', cursor="hand1")
+            cal.pack(fill="both", expand=True)
+            ttk.Button(self.top, text="OK", command=(lambda e=cal: self.get_input_datepicker(cal.selection_get()))).pack()
 
     def get_input_datepicker(self, text):
+        self.reset_count_window()
         self.entryDate.delete(0, tk.END)
         self.entryDate.insert(0, text)
         self.top.destroy()
@@ -104,3 +109,14 @@ class GateSystemPassRegisterUI:
                 showerror("Failed", "Cannot connect to database.")
         else:
             showwarning("Warning", data)
+
+    def reset_count_window(self):
+        self.count_window = 0
+
+    def set_count_window(self):
+        self.reset_count_window()
+        self.top.destroy()
+
+    def exit_program(self):
+        if askokcancel("Quit", "Do you want to quit?"):
+            self.root.quit()
