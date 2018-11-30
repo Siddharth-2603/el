@@ -16,10 +16,10 @@ class GateSystemPassRegisterUI:
         ents = self.make_form()
         self.root.bind('<Return>', (lambda event, e=ents: self.get_entry_fields()))
 
-        b1 = tk.Button(self.root, text="Exit", command=self.root.quit)
+        b1 = tk.Button(self.root, text="Exit", command=self.root.quit, bg="red", fg='white')
         b1.pack(side=tk.RIGHT, padx=5, pady=5)
 
-        b2 = tk.Button(self.root, text="Submit", command=(lambda e=ents: self.submit_data_to_database()))
+        b2 = tk.Button(self.root, text="Submit", command=(lambda e=ents: self.submit_data_to_database()), bg='green', fg='white')
         b2.pack(side=tk.RIGHT, padx=5, pady=5)
 
     def make_form(self):
@@ -60,7 +60,7 @@ class GateSystemPassRegisterUI:
                 data.append(text)
             else:
                 is_valid = False
-                warning_message = field + " Harus Diisi."
+                warning_message = "Warning : " + field + " Harus Diisi."
                 break
         if is_valid:
             return data
