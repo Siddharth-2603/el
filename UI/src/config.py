@@ -1,12 +1,12 @@
 # Database Configuration
 host = "localhost"
-username = "root"
+username = "takeru"
 password = "takeru123"
 db_name = "gate_pass_system"
 unix_socket = "/opt/lampp/var/mysql/mysql.sock"
 
 # Log
-path_dir_log = "/home/takeru/Documents/My-Projects/Python/gate-pass/logs/"
-path_dir_log_excel = "/home/takeru/Documents/My-Projects/Python/gate-pass/logs/excel/"
+path_dir_log = "/home/pi/Documents/python/gate-pass/logs/"
+path_dir_log_excel = "/home/pi/Documents/python/gate-pass/logs/excel/"
 
 icon_path = "src/icons/register.png"

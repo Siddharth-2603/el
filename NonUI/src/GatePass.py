@@ -1,4 +1,4 @@
-from NonUI.src.config import *
+from src.config import *
 from gpiozero import Button
 
 import mysql.connector
@@ -7,6 +7,7 @@ import re
 import os
 import xlsxwriter
 import socket, fcntl, struct, io
+import requests
 
 class GatePass :
     flagError = False
@@ -25,7 +26,7 @@ class GatePass :
                 user=username,
                 passwd=password,
                 database=db_name,
-                unix_socket=unix_socket
+#                unix_socket=unix_socket
             )
             return db
         except mysql.connector.Error as err:
@@ -100,6 +101,32 @@ class GatePass :
             self.errMessage = err
             print(err)
             return self.errMessage
+        
+    def open_barrier_gate(self):
+        try:
+            param = {"code":700}
+            response = requests.post(url_barrier_gate, json=param, timeout=timeout_connection)
+            response.raise_for_status()
+            response_data = response.json()
+            print(self.get_full_current_datetime(), response_data['message'])
+        except requests.exceptions.ConnectionError :
+            print("Cannot establish connection to server, please setup the server properly.")
+            self.retry_connect()
+        except requests.exceptions.Timeout as err_timeout :
+            print(err_timeout)
+            self.retry_connect()
+        except requests.exceptions.HTTPError as err_http :
+            print(err_http)
+            self.retry_connect() 
+            
+    def retry_connect(self):
+        x = retry_connect
+        while(x >= 1) :
+            print("Retrying connect to server in " + str(x) + " second ...")
+            sleep(1)
+            x -= 1
+        print("Reconnecting ...")
+        self.main()
 
     def check_validity(self, code):
         try :
@@ -117,6 +144,7 @@ class GatePass :
                 if member_id is not None and member_id != "":
                     message = "UID is valid"
                     print(message)
+                    self.open_barrier_gate()
                     return message
                 else:
                     self.errMessage = "UID is expired."

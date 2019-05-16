@@ -1,4 +1,4 @@
-from NonUI.src.GatePass import *
+from src.GatePass import *
 
 if __name__ == "__main__" :
     gate = GatePass()

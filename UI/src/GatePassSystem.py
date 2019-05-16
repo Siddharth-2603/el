@@ -24,7 +24,7 @@ class GatePassSystem:
                 user=username,
                 passwd=password,
                 database=db_name,
-                unix_socket=unix_socket
+                #unix_socket=unix_socket
             )
             return db
         except mysql.connector.Error as err:
@@ -59,6 +59,7 @@ class GatePassSystem:
                 if ip_address_device != '':
                     sql = "SELECT id FROM gates WHERE ip_address = '" + str(ip_address_device) + "';"
                     self.db_cursor.execute(sql)
+                    self.db.commit()
                     gate_id = self.db_cursor.fetchone()[0]
 
                 if gate_id != -1:
@@ -67,7 +68,7 @@ class GatePassSystem:
                     sql = "INSERT INTO members (uid, name, expired_dt, created, modified) VALUES (%s, %s, %s, %s, %s)"
                     value = (uid, name, expired_dt, current_dt, current_dt)
                     self.db_cursor.execute(sql, value)
-                    self.db.commit()
+#                    self.db.commit()
 
                     # insert data into 'member_details' table
                     sql = "INSERT INTO member_details (member_id, gate_id, created, modified) VALUES (LAST_INSERT_ID(), %s, %s, %s)"
