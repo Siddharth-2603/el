@@ -1,7 +1,7 @@
 # Database Configuration
 host = "localhost"
-username = "takeru"
-password = "takeru123"
+username = "admin"
+password = "admin123"
 db_name = "gate_pass_system"
 #unix_socket = "/opt/lampp/var/mysql/mysql.sock"
 added_expired_date = 30 # in day(s) from current date
