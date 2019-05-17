@@ -88,6 +88,11 @@ class GatePassSystem:
                 self.errMessage = err
                 print(err)
                 return self.errMessage
+            except TypeError:
+                self.flagError = True
+                self.errMessage = "Gate is not registered."
+                print(self.errMessage)
+                return self.errMessage
         else:
             return "Error : cannot connect to database."
 
