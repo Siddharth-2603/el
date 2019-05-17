@@ -3,13 +3,13 @@
 # make script executable
 sudo chmod +x install-package.sh
 
-# install mysql-client if it's not installed yet
+# install mysql-server if it's not installed yet
 if [ -f /etc/init.d/mysql* ]; then
-	echo "mysql-client is already installed."
+	echo "mysql-server is already installed."
 else
-	echo "Installing mysql-client..."
+	echo "Installing mysql-server..."
 	sudo apt-get install mysql-client
-	echo "Successfully installed mysql-client."
+	echo "Successfully installed mysql-server."
 fi
 
 # install required packages for Python 3
